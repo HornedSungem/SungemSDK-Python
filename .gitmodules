@@ -1,0 +1,3 @@
+[submodule "SungemSDK"]
+	path = SungemSDK
+	url = https://github.com/HornedSungem/SungemSDK.git
