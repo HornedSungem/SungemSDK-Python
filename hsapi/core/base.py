@@ -23,61 +23,73 @@ dll = CDLL(os.path.join(os.path.dirname(__file__), filepath, filename))
 
 
 @unique
-class GlobalOption(Enum):
-	LOG_LEVEL = 0
-
-
-@unique
 class Status(Enum):
-	OK = 0
-	BUSY = -1
-	ERROR = -2
-	OUT_OF_MEMORY = -3
-	DEVICE_NOT_FOUND = -4
-	INVALID_PARAMETERS = -5
-	TIMEOUT = -6
-	NOT_FOUND = -7
-	NO_DATA = -8
-	GONE = -9
-	UNSUPPORTED_GRAPH_FILE = -10
-	MYRIAD_ERROR = -11
+    """
+    返回状态
+    """
+    OK = 0
+    BUSY = -1
+    ERROR = -2
+    OUT_OF_MEMORY = -3
+    DEVICE_NOT_FOUND = -4
+    INVALID_PARAMETERS = -5
+    TIMEOUT = -6
+    NO_DATA = -8
+    GONE = -9
+    UNSUPPORTED_GRAPH_FILE = -10
+    MYRIAD_ERROR = -11
 
 
 @unique
-class GraphOption(Enum):
-	ITERATIONS = 0
-	NETWORK_THROTTLE = 1
-	DONT_BLOCK = 2
-	TIME_TAKEN = 1000
-	DEBUG_INFO = 1001
+class GlobalOption(Enum):
+    """
+    全局选项
+    """
+    LOG_LEVEL = 0
 
 
 def SetGlobalOption(opt, data):
-	data = c_int(data)
-	status = dll.hsSetGlobalOption(opt.value, pointer(data), sizeof(data))
-	if status != Status.OK.value:
-		raise Exception(Status(status))
+    """
+    设置全局选项
+
+    - opt:  参考GlobalOption
+    - data: 值
+    """
+    data = c_int(data)
+    status = dll.hsSetGlobalOption(opt.value, pointer(data), sizeof(data))
+    if status != Status.OK.value:
+        raise Exception(Status(status))
 
 
 def GetGlobalOption(opt):
-	if opt == GlobalOption.LOG_LEVEL:
-		optsize = c_uint()
-		optvalue = c_uint()
-		status = dll.hsGetGlobalOption(opt.value, byref(optvalue), byref(optsize))
-		if status != Status.OK.value:
-			raise Exception(Status(status))
-		return optvalue.value
-	optsize = c_uint()
-	optdata = POINTER(c_byte)()
-	status = dll.hsGetDeviceOption(0, opt.value, byref(optdata), byref(optsize))
-	if status != Status.OK.value:
-		raise Exception(Status(status))
-	v = create_string_buffer(optsize.value)
-	memmove(v, optdata, optsize.value)
-	return v.raw
+    """
+    获取全局选项的值
+
+    - opt:  参考GlobalOption
+    """
+    if opt == GlobalOption.LOG_LEVEL:
+        optsize = c_uint()
+        optvalue = c_uint()
+        status = dll.hsGetGlobalOption(opt.value, byref(optvalue), byref(optsize))
+        if status != Status.OK.value:
+            raise Exception(Status(status))
+        return optvalue.value
+    optsize = c_uint()
+    optdata = POINTER(c_byte)()
+    status = dll.hsGetDeviceOption(0, opt.value, byref(optdata), byref(optsize))
+    if status != Status.OK.value:
+        raise Exception(Status(status))
+    v = create_string_buffer(optsize.value)
+    memmove(v, optdata, optsize.value)
+    return v.raw
 
 
 def BootUpdateApp(fileName):
-	status = dll.hsBootUpdateApp(c_char_p(fileName.encode('utf-8')))
-	if status != Status.OK.value:
-		raise Exception(Status(status))
+    """
+    通过Boot模式固件升级，主要用于固件更新失败后的恢复和升级
+    
+    - fileName: 固件文件
+    """
+    status = dll.hsBootUpdateApp(c_char_p(fileName.encode('utf-8')))
+    if status != Status.OK.value:
+        raise Exception(Status(status))

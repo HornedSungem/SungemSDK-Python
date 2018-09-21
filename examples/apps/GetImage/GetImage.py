@@ -6,13 +6,13 @@ import cv2, sys, numpy as np
 sys.path.append('../../../')
 import hsapi as hs
 
-# Load CNN to device and set scale / mean
-net = hs.HS('mnist', zoom = False, verbose = 2)
+device = hs.GetDevice()
+device.OpenDevice()
 
 try:
-	while(1):
-		image = net.getImage()
-		cv2.imshow('image',image)
-		cv2.waitKey(1)
+    while(1):
+        image = device.GetImage(False)
+        cv2.imshow('image',image)
+        cv2.waitKey(1)
 finally:
-	net.quit()
+    device.CloseDevice()

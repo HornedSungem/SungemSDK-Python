@@ -8,8 +8,7 @@ script_path=$(cd `dirname $0`; pwd)
 
 #----------------------------------------
 
-bash $script_path/../../SungemSDK/installer/install.sh >/dev/null
-brew install python3
+bash $script_path/../../SungemSDK/installer/macOS/install.sh >/dev/null
 
 #----------------------------------------
 
@@ -18,7 +17,7 @@ if [ "$1" = "tuna" ] ; then
     INDEX_URL="-i https://pypi.tuna.tsinghua.edu.cn/simple"
 fi
 
-sudo -H python3 -m pip install $INDEX_URL -r $script_path/../requirements_pip.txt
+pip3 install $INDEX_URL -r $script_path/../requirements_pip.txt
 
 #----------------------------------------
 
