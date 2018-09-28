@@ -343,8 +343,8 @@ class SceneRecorder(Net):
                     for feat in newList:
                         dist = numpy.linalg.norm(feat - feat2)
                         minDist = dist if (dist < minDist) else minDist
-                        if minDist > self.thresh:
-                            newList.append(feat2)
+                    if minDist > self.thresh:
+                        newList.append(feat2)
                 self.featBin[idx]['feats'] = newList
                 
             # Update 
