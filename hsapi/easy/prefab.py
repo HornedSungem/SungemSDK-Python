@@ -211,6 +211,32 @@ class FaceDetectorPlus(Net, SSD):
         boxes = self.getBoundingBoxes(output, image.shape[:2])
         return (image, boxes)
 
+class AgeDetector(Net):
+    scale = 1
+    mean = 87.768914374
+    netSize = (227, 227)
+    graphPath = GetDefaultGraphRelPath("age_graph")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def run(self, image=None, **kwargs):
+        image, output = super().run(image, **kwargs)
+        return (image,output)
+
+
+class GenderDetector(Net):
+    scale = 1
+    mean = 94.030366627
+    netSize = (227, 227)
+    graphPath = GetDefaultGraphRelPath("gender_graph")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def run(self, image=None, **kwargs):
+        image, output = super().run(image, **kwargs)
+        return (image,output)
 
 class Mnist(Net):
     """
