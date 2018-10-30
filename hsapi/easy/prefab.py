@@ -93,14 +93,14 @@ class SSD(object):
         for box in boxes:
             class_id = box[0]
             percentage = int(box[1] * 100)
-            
+
             label_text = self.labels[int(class_id)] + " (" + str(percentage) + "%)"
             box_w = box[4]-box[2]
             box_h = box[5]-box[3]
 
             if (box_w > image_size[0] * 0.8) or (box_h > image_size[1] * 0.8):
                 continue
-            
+
             box_color = (255, 128, 0)
             box_thickness = 2
             cv2.rectangle(image, (int(box[2]), int(box[3])), (int(box[4]), int(box[5])), box_color, box_thickness)
@@ -137,7 +137,7 @@ class SSD(object):
         for box in boxes:
             class_id = box[0]
             if (box[4] - box[2] > image_size[0]*0.8) or (box[5] - box[3] > image_size[1] * 0.8):
-                continue	
+                continue
             if square:
                 w = box[4] - box[2] + 1
                 h = box[5] - box[3] + 1
@@ -165,9 +165,9 @@ class ObjectDetector(Net, SSD):
     netSize = (300, 300)
     graphPath = GetDefaultGraphRelPath("graph_object_SSD")
 
-    labels = [  "aeroplane", "bicycle", "bird", "boat", "bottle", 
-                "bus", "car", "cat", "chair", "cow", "diningtable", 
-                "dog", "horse", "motorbike", "person", "pottedplant", 
+    labels = [  "aeroplane", "bicycle", "bird", "boat", "bottle",
+                "bus", "car", "cat", "chair", "cow", "diningtable",
+                "dog", "horse", "motorbike", "person", "pottedplant",
                 "sheep", "sofa", "train", "tvmonitor"  ]
     thresh = 0.8
 
@@ -285,7 +285,7 @@ class SceneRecorder(Net):
         """
         for k, v in kwargs.items():
             setattr(self, k, v)
-        
+
         if not hasattr(self, 'featBin'):
             self.featDim = result[1].shape[0]
             self.init_recorder()
@@ -313,7 +313,7 @@ class SceneRecorder(Net):
         elif key is 'p' or key is 'P':
             self.resetBins()
         return None
-    
+
     def init_recorder(self):
         import annoy
         self.msg('Please enter 1-%d to record' % self.numBin)
@@ -348,19 +348,19 @@ class SceneRecorder(Net):
                 for m in range(n+1, len(binList)):
                     dist = numpy.linalg.norm(self.featBin[str(binList[n]+1)]['feats'][0] - self.featBin[str(binList[m]+1)]['feats'][0])
                     minDist = dist if (dist < minDist) else minDist
-                    
+
                     self.msg('Compress Feature Bins', '-')
                     self.msg_debug('Bin[%d]-Bin[%d]:%2.2f' % (binList[n]+1, binList[m]+1, dist))
-            
+
             self.estiBGdist = minDist
             self.thresh = minDist * self.threshPerc
             self.msg('Estimated BG dist: %2.2f' % minDist)
             self.msg('Use %2.2f as inner-dist thresh' % self.thresh)
             if self.thresh < 0.4:
                 self.msg('Warning: BG dist too close!','*')
-            
+
             self.msg('Compressing','.')
-            
+
             for n in range(len(binList)):
                 idx = str(binList[n]+1)
                 newList = [self.featBin[idx]['feats'][0]]
@@ -373,8 +373,8 @@ class SceneRecorder(Net):
                     if minDist > self.thresh:
                         newList.append(feat2)
                 self.featBin[idx]['feats'] = newList
-                
-            # Update 
+
+            # Update
             for n in range(self.numBin):
                 self.featBinLength[n] = len(self.featBin[str(n+1)]['feats'])
             self.dispBins()
@@ -388,7 +388,7 @@ class SceneRecorder(Net):
         for idx in range(self.numBin):
             if self.featBinLength[idx] > 0:
                 self.binList.append(idx)
-        
+
         self.msg('Building ANN trees','-')
         for n in range(len(self.binList)):
             idx = str(self.binList[n]+1)
@@ -416,7 +416,7 @@ class SceneRecorder(Net):
         result = self.softmax(numpy.array(dists))
         for n in range(self.numBin):
             self.msg_debug('[%d]: %2.2f' % (n+1, result[n]))
-        
+
         self.msg('Probabilities','-')
         for n in range(self.numBin):
             self.msg('%s' % ('|'*int(10*result[n])))
@@ -429,9 +429,9 @@ class SceneRecorder(Net):
             featList = []
             for i in range(self.numBin):
                 featList.append(self.featBin[str(i+1)]['feats'])
-                pickle.dump(featList, fp)
+            pickle.dump(featList, fp)
         self.msg('Save complete','+')
-        
+
     def loadBinsToLocal(self):
         filename = self.saveFilename
         if os.path.isfile(filename):
@@ -444,11 +444,11 @@ class SceneRecorder(Net):
             self.init_recorder()
         else:
             self.msg('Cannot find data file!')
-        
+
     def resetBins(self):
         del self.featBin
         self.msg('Reset!','+')
-        
+
     def dispBins(self):
         res = '-'
         for n in range(self.numBin):
