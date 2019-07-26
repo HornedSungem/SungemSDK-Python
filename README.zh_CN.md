@@ -13,10 +13,10 @@
 
 ## 安装说明
 
-通过如下命令获取项目和子项目：
+通过如下命令获取项目：
 
 ```bash
-git clone --recursive https://github.com/HornedSungem/SungemSDK-Python.git
+git clone https://github.com/HornedSungem/SungemSDK-Python.git
 ```
 
 进入 `installer` 文件夹，找到和您的操作系统对应的安装脚本，执行安装。
