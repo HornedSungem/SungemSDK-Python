@@ -13,10 +13,10 @@
 
 ## Installation Guide
 
-Clone this repository and all its submodules with:
+Clone this repository with:
 
 ```bash
-git clone --recursive https://github.com/HornedSungem/SungemSDK-Python.git
+git clone https://github.com/HornedSungem/SungemSDK-Python.git
 ```
 
 For installation, you should go to the `installer` folder, and run the `install.sh` corresponding to your operating system.
